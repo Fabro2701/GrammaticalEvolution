@@ -23,6 +23,18 @@ public class OnePointCrossoverOperator extends CrossoverOperator{
 	}
 
 	
+
+	@Override
+	public void cross(Pair<Individual, Individual> parents) {
+		if(this.probability > this.rnd.nextFloat()) {
+			Pair<Chromosome, Chromosome> ncs = crossover(parents.first.getGenotype().getChromosome(0),parents.second.getGenotype().getChromosome(0));
+			parents.first.setGenotype(new Genotype(ncs.first));
+			parents.first.revaluate();
+			parents.second.setGenotype(new Genotype(ncs.second));
+			parents.second.revaluate();
+		}
+		
+	}
 	public Pair<Chromosome, Chromosome> crossover(Chromosome c1, Chromosome c2) {
 		
 		int crossPoint = rnd.nextInt(c1.getLength());
@@ -34,18 +46,6 @@ public class OnePointCrossoverOperator extends CrossoverOperator{
 			child2.setIntToCodon(i, c1.getCodon(i).getIntValue());
 		}
 		return new Pair<Chromosome, Chromosome>(child1,child2);
-	}
-
-	@Override
-	public void cross(Pair<Individual, Individual> parents) {
-		if(this.probability > this.rnd.nextFloat()) {
-			Pair<Chromosome, Chromosome> ncs = crossover(parents.first.getGenotype().getChromosome(),parents.second.getGenotype().getChromosome());
-			parents.first.setGenotype(new Genotype(ncs.first));
-			parents.first.revaluate();
-			parents.second.setGenotype(new Genotype(ncs.second));
-			parents.second.revaluate();
-		}
-		
 	}
 
 }

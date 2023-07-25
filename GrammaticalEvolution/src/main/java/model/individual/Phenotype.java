@@ -41,6 +41,16 @@ public class Phenotype {
 			valid = true;
 		}
 	}
+	public String getPlainSymbols() {
+		StringBuilder s = new StringBuilder();
+		
+		Iterator<Symbol>it = symbols.iterator();
+		while(it.hasNext()) {
+			Symbol current = it.next();
+			s.append(current);
+		}
+		return s.toString();
+	}
 	private void setVisualization() {
 		StringBuilder s = new StringBuilder();
 		

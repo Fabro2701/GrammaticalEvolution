@@ -58,7 +58,7 @@ public class StandardGrammar extends AbstractGrammar{
 	public void parseBNF(String filename) {
 		StringBuilder sb = new StringBuilder();
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("resources/grammar/"+filename+".bnf")));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
 			String aux = reader.readLine();
 			while(aux!=null) {
 				sb.append(aux);

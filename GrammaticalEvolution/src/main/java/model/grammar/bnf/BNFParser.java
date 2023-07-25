@@ -1,12 +1,14 @@
 package model.grammar.bnf;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import model.grammar.StandardGrammar;
 
 
 
@@ -106,44 +108,42 @@ public class BNFParser {
 		return token;
 	}
 	public static void main(String args[]) {
-		String e1 ="<S> -> <IF>.\n"
-				+ "<IF> -> if <COND> { <TRADE> } else { <TRADE> } | if <COND> { <TRADE> }.\n"
-				+ "<COND> -> ( <VALUE> <OP> <OBS> )| ( <COND><LOGOP><COND> ).\n"
-				+ "<VALUE> -> <N> | <REALCONST>.\n"
-				+ "<OBS> -> ma <MA> [ <DAY> ] | <PRICE> [ <DAY> ].\n"
-				+ "<PRICE> -> open|high|low|close.\n"
-				+ "<MA> -> 25|50|200.\n"
-				+ "<DAY> -> 0|1|2|3|4|5|6|7|8|9.\n"
-				+ "<OP> -> <|>|<=|>=.\n"
+		String e1 ="<CODE> -> <LINE>|<CODE> <LINE>.\n"
+				+ "<LINE> -> 'return '<ACTION>;|<IF>.\n"
+				+ "<IF> -> if <COND> {<LINE>} else {<LINE>} | if <COND> { <LINE> }.\n"
+				+ "<COND> -> (<OBS>) | (<OBS> <OP> <OBS>) | ((<AREXP>) <OP> (<AREXP>)).\n"
+				+ "<OBS> -> r_f_d|l_f_d|u_f_d|d_f_d.\n"
+				+ "<OP> -> '<'|>|'<='|>=.\n"
 				+ "<AR> -> +|*|-.\n"
-				+ "<N> -> 0|1|2|3|4|5|6|7|8|9.\n"
-				+ "<REALCONST> -> 0. <N>.\n"
-				+ "<LOGOP> -> '||' | &&.\n"
-				+ "<TRADE> -> return BUY ;|return SELL ;|return NOTHING ;.";
+				+ "<ACTION> -> RIGHT|LEFT|UP|DOWN|NEUTRAL.\n"
+				+ "<V> -> 0|1|2|3|4|5|6|7.\n"
+				+ "<AREXP> -> <OBS>|<V>|<AREXP> <AR> <AREXP>.\n"
+				+ "<Pi> -> 0|1|2|3|4|5|6|7.\n"
+				+ "<LOGOP> -> '||' | &&.";
 		String e2 = "<A>->'a'|<B>."
 				  + "<B>->'b'|'a'.";
 		
-//		StringBuilder sb = new StringBuilder();
-//		try {
-//			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("resources/loads/grammars/default.bnf")));
-//			String aux = reader.readLine();
-//			while(aux!=null) {
-//				sb.append(aux);
-//				aux = reader.readLine();
-//			}
-//			
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		//String e3 = sb.toString();
+		StringBuilder sb = new StringBuilder();
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("resources/loads/grammars/default.bnf")));
+			String aux = reader.readLine();
+			while(aux!=null) {
+				sb.append(aux);
+				aux = reader.readLine();
+			}
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String e3 = sb.toString();
 		BNFParser parser = new BNFParser();
 		System.out.println(parser.parse(e1).toString(4));
 		
 		
 		
-		Pattern p = Pattern.compile("^[^|]+");
-		Matcher m = p.matcher("le| t9"); 
+		Pattern p = Pattern.compile("^[^<]+");
+		Matcher m = p.matcher("{asfas<LINE>}"); 
 		System.out.println(m.find());
 		System.out.println(m.end());
 	}

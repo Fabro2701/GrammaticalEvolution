@@ -13,8 +13,10 @@ public class Genotype extends ArrayList<Chromosome>{
 	}
 	public Genotype() {
 		super();
-		Chromosome c = new Chromosome(Constants.CROMOSOME_LENGTH);
-		this.add(c);
+		for(int i=0;i<Constants.PLOIDY;i++) {
+			Chromosome c = new Chromosome(Constants.CROMOSOME_LENGTH);
+			this.add(c);
+		}
 	}
 	public Genotype(Genotype copy) {
 		super();
@@ -25,8 +27,8 @@ public class Genotype extends ArrayList<Chromosome>{
 	public void init(Random rnd) {
 		this.get(0).init(rnd);
 	}
-	public Chromosome getChromosome() {
-		return this.get(0);
+	public Chromosome getChromosome(int i) {
+		return this.get(i);
 	}
 	
 }

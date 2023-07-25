@@ -23,7 +23,7 @@ public class BasicCodonFlipMutationOperator extends MutationOperator{
 	@Override
 	public void mutateIndividual(Individual individual) {
 		boolean b = false;
-		Chromosome c = individual.getGenotype().getChromosome();
+		Chromosome c = individual.getGenotype().getChromosome(0);
 		for(int i=0;i<c.getLength();i++) {
 			if(this.probability > this.rnd.nextFloat()) {
 				c.getCodon(i).setInt(rnd.nextInt(256));

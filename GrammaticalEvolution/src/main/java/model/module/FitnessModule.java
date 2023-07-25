@@ -27,6 +27,8 @@ public class FitnessModule extends Module{
 		ForkJoinPool pool = ForkJoinPool.commonPool();
 		Task task = new Task(0,population.size()-1);
 		pool.invoke(task);
+
+
 //		for(Individual ind:population) {
 //			if(ind.isEvaluated())continue;
 //			if(ind.isValid()) {
@@ -37,7 +39,7 @@ public class FitnessModule extends Module{
 //			}
 //			ind.setEvaluated(true);
 //		}
-
+		
 	}
 	private class Task extends RecursiveAction {
 		int i,j;
@@ -47,7 +49,7 @@ public class FitnessModule extends Module{
 		}
 		@Override
 		protected void compute() {
-			if(j-i >= 20) {
+			if(j-i >= 2) {
 				ForkJoinTask.invokeAll(createSubtasks());
 			}
 			else {

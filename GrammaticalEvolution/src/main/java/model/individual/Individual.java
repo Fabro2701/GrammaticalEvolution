@@ -2,7 +2,7 @@ package model.individual;
 
 import model.grammar.AbstractGrammar;
 
-public class Individual implements Comparable<Individual>{
+public class Individual implements Comparable<Individual>, Cloneable{
 	
 	protected Genotype genotype;
 	protected Phenotype phenotype;
@@ -19,7 +19,7 @@ public class Individual implements Comparable<Individual>{
 		this.phenotype = pheno;
 		this.genotype = geno;
 		this.grammar = grammar;
-		this.phenotype.init(grammar.parse(genotype.getChromosome()));
+		this.phenotype.init(grammar.parse(genotype.getChromosome(0)));
 		
 		
 		this.age = 0;
@@ -37,7 +37,7 @@ public class Individual implements Comparable<Individual>{
 	}
 	public void revaluate() {
 		this.evaluated = false;
-		this.phenotype.init(grammar.parse(genotype.getChromosome()));
+		this.phenotype.init(grammar.parse(genotype.getChromosome(0)));
 		this.valid = this.phenotype.isValid();
 	}
 	public Genotype getGenotype() {
@@ -93,6 +93,10 @@ public class Individual implements Comparable<Individual>{
         } else {
             return 0;
         }
+	}
+	@Override
+	public Object clone() {
+		return new Individual(this);
 	}
 	@Override 
 	public String toString() {

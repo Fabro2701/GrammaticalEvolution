@@ -22,8 +22,8 @@ public class Util {
 	}
 	public static float genotypeSimilarity(Genotype g1, Genotype g2) {
 		float similarity=0.0f;
-		Chromosome c1 = g1.getChromosome();
-		Chromosome c2 = g2.getChromosome();
+		Chromosome c1 = g1.getChromosome(0);
+		Chromosome c2 = g2.getChromosome(0);
 		
 		for(int i=0;i<c1.getLength() && i<c1.getUsedCodons() && i<c2.getUsedCodons();i++) {
 			similarity+=c1.getCodon(i).getIntValue()==c2.getCodon(i).getIntValue()?1.f:0.f;

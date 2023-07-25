@@ -29,5 +29,6 @@ public class MutationModule extends Module{
 		for(Individual ind:population) {
 			operator.mutateIndividual(ind);
 		}
+	
 	}
 }

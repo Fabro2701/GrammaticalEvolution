@@ -11,13 +11,13 @@ public class BNFTokenizer {
 	
 	//Regular Expressions for each token type
 	String [][]Spec = {{"^\\s+",null},
-			   		   {"^[.]","."},//end of rule
-			   		   {"^[|]","|"},//productions separator
-			   		   {"^->","->"},//rule declaration
-			   		   {"^<[\\d]+>","MERIT"},
-			   		   {"^<[\\w]+>","NTSYMBOL"},
-			   		   {"^'[\\w\\W&&[^']]+'","TSYMBOL"},
-			   		   {"^[\\w\\W&&[^|]&&[^.]&&[^\\s]]+","TSYMBOL"}};
+	   		   {"^[.]","."},//end of rule
+	   		   {"^[|]","|"},//productions separator
+	   		   {"^->","->"},//rule declaration
+	   		   {"^<[\\d]+>","MERIT"},
+	   		   {"^<[\\w]+>","NTSYMBOL"},
+	   		   {"^'[^']+'","TSYMBOL"},
+	   		   {"^[^|.<\\s]+","TSYMBOL"}};
 	public void init(String string) {
 		_cursor=0;
 		_string=string;
@@ -29,6 +29,7 @@ public class BNFTokenizer {
 	public boolean hasMoreTokens() {
 		return this._cursor < this._string.length();
 	}
+	boolean debug = false;
 	public JSONObject getNextToken() {
 		if(!this.hasMoreTokens()) {
 			//System.err.println("No more tokens");
@@ -48,15 +49,15 @@ public class BNFTokenizer {
 			
 			
 			if(tokenValue==null) {
-				System.out.println(0);
+				if(debug)System.out.println(0);
 				continue;
 			}
 			if(tokenType == null) {
-				System.out.println(1);
+				if(debug)System.out.println(1);
 				return this.getNextToken();
 			}
 
-			System.out.println("2  "+tokenValue);
+			if(debug)System.out.println("2  "+tokenValue);
 			return new JSONObject().put("type", tokenType).put("value",tokenValue);
 		}
 		System.err.println("Unexpected token "+string.charAt(0));
@@ -69,7 +70,7 @@ public class BNFTokenizer {
 	 * @return
 	 */
 	private String _match(String regexp, String string) {
-		System.out.println(regexp+ "   -   < "+string+" >");
+		if(debug)System.out.println(regexp+ "   -   < "+string+" >");
 		Pattern p = Pattern.compile(regexp);
 		Matcher m = p.matcher(string); 
 		if(!m.find()||m.start()!=0) {
