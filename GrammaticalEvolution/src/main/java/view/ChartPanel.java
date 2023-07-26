@@ -4,17 +4,37 @@
  */
 package view;
 
+import java.awt.Color;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+
 /**
  *
  * @author Fabrizio Ortega
  */
 public class ChartPanel extends javax.swing.JPanel {
-
+    DefaultCategoryDataset data;
     /**
      * Creates new form ChartPanel
      */
     public ChartPanel() {
         initComponents();
+        data = new DefaultCategoryDataset();
+        JFreeChart chart = ChartFactory.createLineChart(
+            "",
+            "","",
+            data,
+            PlotOrientation.VERTICAL,
+            true,true,false);
+       
+        chart.getPlot().setBackgroundPaint(Color.white);
+        
+
+	org.jfree.chart.ChartPanel panel = new org.jfree.chart.ChartPanel(chart); 
+	panel.setPreferredSize( new java.awt.Dimension(1212, 585));
+        this.add(panel);
     }
 
     /**
@@ -26,16 +46,9 @@ public class ChartPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        setMinimumSize(new java.awt.Dimension(1212, 585));
+        setPreferredSize(new java.awt.Dimension(1212, 585));
     }// </editor-fold>//GEN-END:initComponents
 
 
