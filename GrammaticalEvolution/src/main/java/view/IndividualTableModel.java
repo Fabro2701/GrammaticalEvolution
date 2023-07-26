@@ -4,6 +4,7 @@
  */
 package view;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
@@ -25,9 +26,10 @@ public class IndividualTableModel extends DefaultTableModel {
 
 	public void update(Population population) {
 		this.dataVector.clear();
+		Collections.sort(population, Collections.reverseOrder());
 		for(Individual ind:population) {
-			if(!ind.isValid())continue;
-			this.dataVector.add(new Vector(List.of(ind.getAge(),ind.getFitness(),ind.getPhenotype().getPlainSymbols())));
+			//if(!ind.isValid())continue;
+			this.dataVector.add(new Vector(List.of(ind.getAge(),ind.getFitness(),ind.isValid()?ind.getPhenotype().getPlainSymbols():"")));
 		}
 		this.fireTableDataChanged();
 	}

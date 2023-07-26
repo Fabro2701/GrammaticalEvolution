@@ -30,7 +30,7 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		this.phenotype = new Phenotype(copy.phenotype);
 		this.genotype = new Genotype(copy.genotype);
 		this.grammar = copy.grammar;
-		this.age = copy.age;
+		this.age = 0;
 		this.valid = copy.valid;
 		this.fitness = copy.fitness;
 		this.evaluated = copy.evaluated;
