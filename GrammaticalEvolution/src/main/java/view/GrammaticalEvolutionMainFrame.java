@@ -5,8 +5,17 @@
 package view;
 
 import java.awt.Dimension;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Properties;
+
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+
+import model.Experiment;
+import model.algorithm.AbstractSearchAlgorithm;
+import model.algorithm.SwingSearchAlgorithm;
 
 /**
  *
@@ -14,11 +23,15 @@ import javax.swing.table.DefaultTableModel;
  */
 public class GrammaticalEvolutionMainFrame extends javax.swing.JFrame {
     JTable table;
-    DefaultTableModel tableModel;
+    IndividualTableModel tableModel;
+    boolean run;
+    Experiment exp;
+    Properties props;
     /**
      * Creates new form GrammaticalEvolutionMainFrame
      */
     public GrammaticalEvolutionMainFrame() {
+    	this.run = false;
         tableModel = new IndividualTableModel();
         table = new JTable(tableModel);
         table.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -27,6 +40,17 @@ public class GrammaticalEvolutionMainFrame extends javax.swing.JFrame {
         table.setMinimumSize(new Dimension(340,1000));
         table.setPreferredSize(new Dimension(340,1000));
         initComponents();
+    }
+    public GrammaticalEvolutionMainFrame(Class<?>exp, Properties props) {
+    	this();
+    	this.props = props;
+    	try {
+			this.exp = (Experiment) exp.getConstructor(AbstractSearchAlgorithm.class).newInstance(new SwingSearchAlgorithm(this));
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+			e.printStackTrace();
+		}
+    	this.exp.setup(props);
+    	
     }
 
     /**
@@ -118,14 +142,28 @@ public class GrammaticalEvolutionMainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void playButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playButtonActionPerformed
-        // TODO add your handling code here:
+        this.run=true;
+        this.pauseButton.setEnabled(true);
+        this.pauseButton.setSelected(false);
+        this.playButton.setEnabled(false);
+        runEventPlay();
     }//GEN-LAST:event_playButtonActionPerformed
 
     private void pauseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pauseButtonActionPerformed
-        // TODO add your handling code here:
+    	this.run=false;
+        this.playButton.setEnabled(true);
+        this.playButton.setSelected(false);
     }//GEN-LAST:event_pauseButtonActionPerformed
-
-    /**
+    public void runEventPlay() {
+    	this.exp.run(props);
+    }
+    public boolean isRun() {
+		return run;
+	}
+	public IndividualTableModel getTableModel() {
+		return tableModel;
+	}
+	/**
      * @param args the command line arguments
      */
     public static void main(String args[]) {

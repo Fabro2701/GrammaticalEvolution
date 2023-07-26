@@ -20,6 +20,7 @@ public class Phenotype {
 		valid = copy.valid;
 		//strategy = new Strategy(copy.strategy);
 		visualization = copy.visualization;
+		this.symbols = copy.symbols;
 	}
 	public boolean isValid() {
 		return valid;
@@ -43,7 +44,9 @@ public class Phenotype {
 	}
 	public String getPlainSymbols() {
 		StringBuilder s = new StringBuilder();
-		
+		if(symbols==null) {
+			int a=0;
+		}
 		Iterator<Symbol>it = symbols.iterator();
 		while(it.hasNext()) {
 			Symbol current = it.next();
