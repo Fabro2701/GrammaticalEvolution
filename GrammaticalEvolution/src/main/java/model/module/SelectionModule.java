@@ -19,7 +19,7 @@ public class SelectionModule extends Module{
 	public void execute() {
 		this.selectedPopulation.clear();
 		operator.selectPopulation(population);
-		this.population.removeAll(selectedPopulation);
+		//this.population.removeAll(selectedPopulation);
 	}
 	@Override
 	public void setProperties(Properties properties) {

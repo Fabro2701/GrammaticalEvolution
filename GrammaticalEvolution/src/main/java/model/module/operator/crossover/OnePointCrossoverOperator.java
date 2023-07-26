@@ -42,8 +42,8 @@ public class OnePointCrossoverOperator extends CrossoverOperator{
 		Chromosome child1 = new Chromosome(c1);
 		Chromosome child2 = new Chromosome(c2);
 		for(int i=crossPoint;i<child1.getLength();i++) {
-			child1.setIntToCodon(i, c2.getCodon(i).getIntValue());
-			child2.setIntToCodon(i, c1.getCodon(i).getIntValue());
+			child1.setIntToCodon(i, c2.getCodon(i));
+			child2.setIntToCodon(i, c1.getCodon(i));
 		}
 		return new Pair<Chromosome, Chromosome>(child1,child2);
 	}

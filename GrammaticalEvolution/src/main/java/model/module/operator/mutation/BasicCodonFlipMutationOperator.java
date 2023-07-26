@@ -26,7 +26,7 @@ public class BasicCodonFlipMutationOperator extends MutationOperator{
 		Chromosome c = individual.getGenotype().getChromosome(0);
 		for(int i=0;i<c.getLength();i++) {
 			if(this.probability > this.rnd.nextFloat()) {
-				c.getCodon(i).setInt(rnd.nextInt(256));
+				c.setIntToCodon(i, rnd.nextInt(256));
 				b = true;
 			}
 		}

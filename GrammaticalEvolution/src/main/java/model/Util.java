@@ -26,7 +26,7 @@ public class Util {
 		Chromosome c2 = g2.getChromosome(0);
 		
 		for(int i=0;i<c1.getLength() && i<c1.getUsedCodons() && i<c2.getUsedCodons();i++) {
-			similarity+=c1.getCodon(i).getIntValue()==c2.getCodon(i).getIntValue()?1.f:0.f;
+			similarity+=c1.getCodon(i)==c2.getCodon(i)?1.f:0.f;
 		}
 		similarity /= (float)Math.min(Math.min(c1.getUsedCodons(),c2.getUsedCodons()),c1.getLength());
 		return similarity;

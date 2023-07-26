@@ -37,9 +37,8 @@ public class SimpleJoinOperator extends JoinOperator{
 //		for(Individual ind : outsiders) {
 //			System.out.println(ind.isValid()?ind:"nonvalid");
 //		}
-		for(Individual ind:outsiders) {
-			this.generalPopulation.add((Individual)ind);
-		}
+		this.generalPopulation.addAll(outsiders);
+		
 		//this.generalPopulation.addAll(outsiders);
 		
 	}
