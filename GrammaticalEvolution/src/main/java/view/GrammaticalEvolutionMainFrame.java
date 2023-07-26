@@ -37,8 +37,9 @@ public class GrammaticalEvolutionMainFrame extends javax.swing.JFrame {
         table.getColumnModel().getColumn(0).setMaxWidth(50);
         table.getColumnModel().getColumn(1).setMaxWidth(100);
         table.getColumnModel().getColumn(2).setMaxWidth(100);
-        table.setMinimumSize(new Dimension(340,1000));
-        table.setPreferredSize(new Dimension(340,1000));
+        //table.setMinimumSize(new Dimension(340,1000));
+        //table.setPreferredSize(new Dimension(340,1000));
+        table.setFillsViewportHeight(true);
         initComponents();
     }
     public GrammaticalEvolutionMainFrame(Class<?>exp, Properties props) {
@@ -157,11 +158,17 @@ public class GrammaticalEvolutionMainFrame extends javax.swing.JFrame {
     public void runEventPlay() {
     	this.exp.run(props);
     }
+	public void updateStats(double max, double average) {
+		this.chartPanel.updateStats(max,average);
+	}
     public boolean isRun() {
 		return run;
 	}
 	public IndividualTableModel getTableModel() {
 		return tableModel;
+	}
+	public Experiment getExperiment() {
+		return exp;
 	}
 	/**
      * @param args the command line arguments

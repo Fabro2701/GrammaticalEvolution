@@ -51,6 +51,13 @@ public class ChartPanel extends javax.swing.JPanel {
         setPreferredSize(new java.awt.Dimension(1212, 585));
     }// </editor-fold>//GEN-END:initComponents
 
+    int count = 0;
+	public void updateStats(double max, double avg) {
+		data.addValue(max, "Max", (Integer)count);
+		data.addValue(avg, "Avg", (Integer)count);
+		count++;
+	}
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
