@@ -4,14 +4,11 @@
  */
 package view;
 
-import java.awt.Dimension;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 import java.util.Properties;
 
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableModel;
 
 import model.Experiment;
 import model.algorithm.AbstractSearchAlgorithm;
@@ -158,8 +155,8 @@ public class GrammaticalEvolutionMainFrame extends javax.swing.JFrame {
     public void runEventPlay() {
     	this.exp.run(props);
     }
-	public void updateStats(double max, double average) {
-		this.chartPanel.updateStats(max,average);
+	public void updateStats(double max, double average, Map<String, Double>others) {
+		this.chartPanel.updateStats(max,average, others);
 	}
     public boolean isRun() {
 		return run;

@@ -1,21 +1,31 @@
 package model.module.operator.collector;
 
 import java.util.DoubleSummaryStatistics;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Random;
 
 import model.individual.Individual;
-import model.individual.Population;
-import model.module.operator.Operator;
+import model.module.operator.fitness.FitnessEvaluationOperator;
 import view.GrammaticalEvolutionMainFrame;
 
 public class FitnessCollectorOperator extends CollectorOperator{
 	GrammaticalEvolutionMainFrame frame;
+	Individual lastBest;
+	Map<String,FitnessEvaluationOperator>ops;
+	Map<String,Double>validations;
 	public FitnessCollectorOperator(Properties properties, Random rnd) {
 		super(properties, rnd);
+		ops = new HashMap<>();
+		validations = new HashMap<>();
 	}
 	public void setFrame(GrammaticalEvolutionMainFrame frame) {
 		this.frame = frame;
+	}
+	public void addValidationOps(Map<String,FitnessEvaluationOperator>ops) {
+		this.ops.putAll(ops);
 	}
 	
 	@Override
@@ -27,7 +37,15 @@ public class FitnessCollectorOperator extends CollectorOperator{
 		System.out.println("Best Individual: "+stats.getMax());
 		System.out.println("Avg Individual: "+stats.getAverage());		
 		
-		if(frame!=null)frame.updateStats(stats.getMax(),stats.getAverage());
+		if(best!=lastBest) {
+			for(Entry<String,FitnessEvaluationOperator>op:ops.entrySet()) {
+				this.validations.put(op.getKey(), (double) op.getValue().evaluate(best));
+			}
+			lastBest = best;
+		}
+		
+		
+		if(frame!=null)frame.updateStats(stats.getMax(),stats.getAverage(),this.validations);
 	}
 	@Override
 	public void setProperties(Properties properties) {

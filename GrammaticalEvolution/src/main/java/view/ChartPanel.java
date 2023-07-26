@@ -5,6 +5,8 @@
 package view;
 
 import java.awt.Color;
+import java.util.Map;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
@@ -52,9 +54,10 @@ public class ChartPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     int count = 0;
-	public void updateStats(double max, double avg) {
+	public void updateStats(double max, double avg, Map<String, Double>others) {
 		data.addValue(max, "Max", (Integer)count);
 		data.addValue(avg, "Avg", (Integer)count);
+		for(var e:others.entrySet()) data.addValue(e.getValue(), e.getKey(), (Integer)count);
 		count++;
 	}
 

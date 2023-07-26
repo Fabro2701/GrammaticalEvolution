@@ -1,4 +1,4 @@
-package model.grammar;
+package model.grammar; 
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
