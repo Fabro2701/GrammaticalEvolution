@@ -37,9 +37,8 @@ public class Phenotype {
 		}
 		else {
 			this.symbols = symbols;
-//			Parser parser = new Parser();
-//			evaluator = new Evaluator(parser.parse(this.getVisualCode()));
-//			strategy.setEvaluator(evaluator);
+			this.plainSymbols=null;
+			this.visualization=null;
 			valid = true;
 		}
 	}
