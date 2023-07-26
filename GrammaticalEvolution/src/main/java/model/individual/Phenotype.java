@@ -10,7 +10,7 @@ public class Phenotype {
 	boolean valid;
 	//Strategy strategy;
 	//Evaluator evaluator;
-	String visualization;
+	String visualization,plainSymbols;
 	LinkedList<Symbol> symbols; 
 	public Phenotype() {
 		valid=false;
@@ -20,6 +20,7 @@ public class Phenotype {
 		valid = copy.valid;
 		//strategy = new Strategy(copy.strategy);
 		visualization = copy.visualization;
+		plainSymbols = copy.plainSymbols;
 		this.symbols = copy.symbols;
 	}
 	public boolean isValid() {
@@ -43,16 +44,16 @@ public class Phenotype {
 		}
 	}
 	public String getPlainSymbols() {
+		if(plainSymbols!=null)return plainSymbols;
+		
 		StringBuilder s = new StringBuilder();
-		if(symbols==null) {
-			int a=0;
-		}
 		Iterator<Symbol>it = symbols.iterator();
 		while(it.hasNext()) {
 			Symbol current = it.next();
 			s.append(current);
 		}
-		return s.toString();
+		plainSymbols = s.toString();
+		return plainSymbols;
 	}
 	private void setVisualization() {
 		StringBuilder s = new StringBuilder();
@@ -101,5 +102,8 @@ public class Phenotype {
 			setVisualization();
 		}
 		return visualization;
+	}
+	public LinkedList<Symbol> getSymbols() {
+		return symbols;
 	}
 }

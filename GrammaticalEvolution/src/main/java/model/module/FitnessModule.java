@@ -28,18 +28,18 @@ public class FitnessModule extends Module{
 		Task task = new Task(0,population.size()-1);
 		pool.invoke(task);
 
-
-//		for(Individual ind:population) {
-//			if(ind.isEvaluated())continue;
-//			if(ind.isValid()) {
-//				ind.setFitness(operator.evaluate(ind));
-//			}
-//			else {
-//				ind.setFitness(this.defaultFitness);
-//			}
-//			ind.setEvaluated(true);
-//		}
-		
+/*
+		for(Individual ind:population) {
+			if(ind.isEvaluated())continue;
+			if(ind.isValid()) {
+				ind.setFitness(operator.evaluate(ind));
+			}
+			else {
+				ind.setFitness(this.defaultFitness);
+			}
+			ind.setEvaluated(true);
+		}
+		*/
 	}
 	private class Task extends RecursiveAction {
 		int i,j;
