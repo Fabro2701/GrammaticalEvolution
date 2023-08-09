@@ -7,6 +7,7 @@ import model.Constants;
 import model.individual.Population;
 import model.module.operator.Operator;
 import model.module.operator.initialization.InitializationOperator;
+import model.module.operator.initialization.MultipleInitializer;
 
 public class InitializationModule extends Module{
 	InitializationOperator operator;
@@ -24,8 +25,11 @@ public class InitializationModule extends Module{
 	}
 	@Override
 	public void execute() {
-		for(int i=0;i<num;i++) {
-			population.add(operator.createIndividual());
+		if(operator instanceof MultipleInitializer)population.addAll(operator.createIndividuals(num));
+		else {
+			for(int i=0;i<num;i++) {
+				population.add(operator.createIndividual());
+			}
 		}
 	}
 	@Override

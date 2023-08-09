@@ -1,5 +1,6 @@
 package model.module.operator.initialization;
 
+import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
@@ -30,6 +31,11 @@ public class RandomInitializerOperator extends InitializationOperator{
 		Phenotype pheno = new Phenotype();
 		
 		return new Individual(geno,pheno,this.grammar);
+	}
+	@Override
+	public List<Individual> createIndividuals(int n) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 

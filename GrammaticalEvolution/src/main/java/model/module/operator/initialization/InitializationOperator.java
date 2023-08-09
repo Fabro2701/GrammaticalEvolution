@@ -1,5 +1,6 @@
 package model.module.operator.initialization;
 
+import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
@@ -15,4 +16,5 @@ public abstract class InitializationOperator extends Operator{
 	}
 	
 	public abstract Individual createIndividual();
+	public abstract List<Individual> createIndividuals(int n);
 }
