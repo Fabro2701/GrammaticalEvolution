@@ -97,7 +97,7 @@ public class BNFParser {
 	protected JSONObject _eat(String type) {
 		JSONObject token=_lookahead;
 		if(this._lookahead==null) {
-			System.err.println("unex end of input");
+			System.err.println("unex end of input"+" Expected "+type);
 			return null;
 		}
 		if(!this._lookahead.getString("type").equals(type)) {

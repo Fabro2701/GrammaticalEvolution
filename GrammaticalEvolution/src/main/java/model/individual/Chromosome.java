@@ -1,6 +1,7 @@
 package model.individual;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.List;
 import java.util.Random;
@@ -51,5 +52,21 @@ public class Chromosome {
 	}
 	public int getLength() {return this.length;}
 	public int getCodon(int i) {return this.codons[i];}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Chromosome other = (Chromosome) obj;
+		return Arrays.equals(codons, other.codons);
+	}
+	@Override
+	public String toString() {
+		return "Chromosome [codons=" + Arrays.toString(codons) + "]";
+	}
 
 }

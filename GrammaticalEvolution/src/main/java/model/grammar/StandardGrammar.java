@@ -30,11 +30,18 @@ public class StandardGrammar extends AbstractGrammar{
 		while(true) {
 			ps = this.getRule(t);
 			int m = ps.size();
+			if(m==1) {
+				q.addAll(0, ps.get(0));
+				i--;
+			}
+			else {
+
+				int r = c.getCodon(i) % m;
+				q.addAll(0, ps.get(r));
+			}
 			//int r = Util.toInt(codons.get(i).bits.get(0, Util.log2(m)));
 			
-			int r = c.getCodon(i) % m;
 			//c.setModToCodon(i, r);
-			q.addAll(0, ps.get(r));
 			
 			calls++;
 			while(!q.isEmpty() && q.getFirst().getType()==SymbolType.Terminal) {
@@ -68,6 +75,7 @@ public class StandardGrammar extends AbstractGrammar{
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return;
 		}
 		String string = sb.toString();
 		
