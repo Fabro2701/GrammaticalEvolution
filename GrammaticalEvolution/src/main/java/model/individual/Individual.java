@@ -9,7 +9,7 @@ public class Individual implements Comparable<Individual>, Cloneable{
 	protected AbstractGrammar grammar;
 	protected int age;
 	protected boolean evaluated,valid;
-	protected float fitness;
+	protected double fitness;
 	
 	public Individual() {
 		evaluated = valid = false;
@@ -64,10 +64,10 @@ public class Individual implements Comparable<Individual>, Cloneable{
 	public void setAge(int age) {
 		this.age = age;
 	}
-	public float getFitness() {
+	public double getFitness() {
 		return fitness;
 	}
-	public void setFitness(float fitness) {
+	public void setFitness(double fitness) {
 		this.fitness = fitness;
 	}
 	public boolean isEvaluated() {
