@@ -13,7 +13,6 @@ import model.individual.Population;
 import model.module.operator.Operator;
 
 public class RouletteSelectionOperator extends SelectionOperator{
-	int k;
 	public RouletteSelectionOperator(Properties properties, Random rnd) {
 		super(properties, rnd);
 		// TODO Auto-generated constructor stub
@@ -22,7 +21,6 @@ public class RouletteSelectionOperator extends SelectionOperator{
 	@Override
 	public void setProperties(Properties properties) {
 		super.setProperties(properties);
-		k = Integer.parseInt(properties.getProperty(Constants.TOURNAMENT_SIZE, Constants.DEFAULT_TOURNAMENT_SIZE));
 	}
 
 
