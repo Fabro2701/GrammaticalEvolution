@@ -1,5 +1,5 @@
 <S> -> <S><IF>|<IF>.
-<IF> -> if(<COND>'){'<RES>';}'|if(<COND>'){'<RES>';}else{'<RES>';}'.
+<IF> -> if(<COND>'){'<RES>';}'.
 <COND> -> <OBS> <OP> <VALUE> | <OBS> <OP> <OBS> |'(' <COND> <OP_RELA> <COND>')'.
 <OP> -> '<'|'>'|'<='|'>='.
 <OP_RELA> -> '&&'|'||'.

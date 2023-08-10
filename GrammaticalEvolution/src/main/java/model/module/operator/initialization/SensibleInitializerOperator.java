@@ -36,8 +36,7 @@ public class SensibleInitializerOperator extends InitializationOperator implemen
 	public List<Individual> createIndividuals(int n) {
 		List<Individual>inds = new ArrayList<>();
 		for(int i=0;i<n;i++) {
-			//Chromosome chr = i%2==0?grow():full();
-			Chromosome chr = full();
+			Chromosome chr = i%2==0?grow():full();
 			Genotype geno = new Genotype(chr);
 			Phenotype pheno = new Phenotype();
 			Individual ind = new Individual(geno,pheno,this.grammar);
