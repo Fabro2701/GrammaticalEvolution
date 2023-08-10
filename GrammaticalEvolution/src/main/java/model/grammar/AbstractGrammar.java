@@ -257,8 +257,8 @@ public abstract class AbstractGrammar {
 	private int auxMinExp(Symbol s) {
 		if(s.type == SymbolType.NTerminal) {
 			int tmp =  _rulesProductions.get(s)._minimumExp;
-			tmp++;
-			//if(_rulesProductions.get(s).size()>1)tmp++;
+			//tmp++;
+			if(_rulesProductions.get(s).size()>1)tmp++;
 			return auxInf(tmp);
 		}
 		return 0;
@@ -268,9 +268,10 @@ public abstract class AbstractGrammar {
 			for(Production p:entry.getValue()) {
 				p._minimumExp = 0;
 				for(Symbol s:p) {
-					if(s.type == SymbolType.NTerminal) {
+					p._minimumExp += auxMinExp(s);
+					/*if(s.type == SymbolType.NTerminal) {
 						p._minimumExp += this._rulesProductions.get(s)._minimumExp +1;
-					}
+					}*/
 				}
 			}
 		}
