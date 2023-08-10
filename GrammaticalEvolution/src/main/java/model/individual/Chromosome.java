@@ -35,6 +35,10 @@ public class Chromosome {
 			codons[i] = rnd.nextInt(256);
 		}
 	}
+	public void shrink(int l) {
+		codons = Arrays.copyOf(codons, l);
+		this.length=l;
+	}
 	public void setIntToCodon(int i, int v) {
 		codons[i] = v;
 	}

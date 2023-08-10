@@ -54,6 +54,9 @@ public class TreeNode {
 	public int getNumberOfChildren() {
 		return this._children.size();
 	}
+	public int get_depth() {
+		return _depth;
+	}
 	@Override
 	public String toString() {
         StringBuilder buffer = new StringBuilder(50);

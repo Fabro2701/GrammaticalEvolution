@@ -26,7 +26,7 @@ public class DerivationTree {
 		_root = new TreeNode(copy);
 		_current = _root;
 	}
-	protected void _addNode(TreeNode node) {
+	public void addNode(TreeNode node) {
 		if(_root == null) {
 			_root = node;
 			_deepest = _root;
@@ -39,7 +39,7 @@ public class DerivationTree {
 		_nodeCount++;
 	}
 	public boolean buildFromChromosome(Chromosome c) {
-		_addNode(new TreeNode(_grammar.getInitial()));
+		addNode(new TreeNode(_grammar.getInitial()));
 		LinkedList<TreeNode>pending = new LinkedList<TreeNode>();
 		pending.add(_current);
 		int i = 0;
@@ -49,10 +49,10 @@ public class DerivationTree {
 			
 			if(_current._data.getType().equals(AbstractGrammar.SymbolType.NTerminal)) {
 				if(_grammar.getRule(_current._data).size()==1) {//no codon needed
-					_expandAndPushNode(0,pending);
+					expandAndPushNode(0,pending);
 				}
 				else{
-					_expandAndPushNode(c.getCodon(i%c.getLength()),pending);
+					expandAndPushNode(c.getCodon(i%c.getLength()),pending);
 					i++;
 				}
 			}
@@ -60,17 +60,18 @@ public class DerivationTree {
 		}
 		return true;
 	}
-	private void _expandAndPushNode(int codonValue, LinkedList<TreeNode> pending) {
+	public void expandAndPushNode(int codonValue, LinkedList<TreeNode> pending) {
 		Rule r = _grammar.getRule(_current._data);
 		Production ps = _grammar.getRule(_current._data).get(codonValue%r.size());
 		for(Symbol s:ps) {
 			TreeNode n = new TreeNode(s);
-			_addNode(n);
+			addNode(n);
 		}
 		
 		pending.addAll(0, this._current._children);
 		
 	}
+	
 	public TreeNode getDeepest() {
 		return this._deepest;
 	}
@@ -79,6 +80,12 @@ public class DerivationTree {
 	}
 	public TreeNode getRoot() {
 		return this._root;
+	}
+	public TreeNode get_current() {
+		return _current;
+	}
+	public void setCurrent(TreeNode current) {
+		this._current=current;
 	}
 	@Override
 	public String toString() {

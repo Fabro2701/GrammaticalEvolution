@@ -2,7 +2,7 @@ package model;
 
 public class Constants {
 	
-	public static final int CROMOSOME_LENGTH = 50;
+	public static final int CROMOSOME_LENGTH = 100;
 	public static final int PLOIDY = 2;
 	
 	//default values

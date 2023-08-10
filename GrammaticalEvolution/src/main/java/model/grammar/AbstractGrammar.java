@@ -108,6 +108,7 @@ public abstract class AbstractGrammar {
 
 			}
 			sb.deleteCharAt(sb.length() - 1);
+			sb.append(String.format("(%b, %d, %d)", this._recursive, this._minimumDepth, this._minimumExp));
 			return sb.toString();
 		}
 		
@@ -320,7 +321,7 @@ public abstract class AbstractGrammar {
 	
 	public static void main(String args[]) {
 		AbstractGrammar g = new StandardGrammar();
-		g.parseBNF("resources/grammar/default1.bnf");
+		g.parseBNF("resources/grammar/default.bnf");
 		System.out.println(g);
 
 		g.calculateAttributes();
