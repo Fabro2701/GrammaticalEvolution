@@ -89,7 +89,7 @@ public class DerivationTree {
 		g.parseBNF("resources/grammar/default.bnf");
 		DerivationTree t = new DerivationTree(g);
 		Chromosome c = new Chromosome(50);
-		c.init(new Random(3));
+		c.init(new Random(1));
 		System.out.println(c);
 		Genotype geno = new Genotype(c);
 		Phenotype pheno = new Phenotype();

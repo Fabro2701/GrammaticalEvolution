@@ -2,9 +2,15 @@ package model.grammar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 
+
+import model.Util.Pair;
 import model.individual.Chromosome;
 
 
@@ -14,7 +20,7 @@ public abstract class AbstractGrammar {
 	HashMap<Symbol,Rule>_rulesProductions;
 
 	public AbstractGrammar() {
-		_rulesProductions = new HashMap<Symbol,Rule>();
+		_rulesProductions = new LinkedHashMap<Symbol,Rule>();
 
 	}
 	public abstract LinkedList<Symbol> parse(Chromosome c);
@@ -147,50 +153,28 @@ public abstract class AbstractGrammar {
 		if(initial.getType()==SymbolType.Terminal)throw new IllegalArgumentException("The initial symbol has to be non-Terminal");
 		this.initial = initial;
 	}
+	private static int inf = 99999;
 	public void calculateAttributes() {
 		List<Symbol>visitedRules = new ArrayList<Symbol>();
-		List<Symbol>calculated = new ArrayList<Symbol>();
 		
 		//clear
 		for(Symbol s:this._rulesProductions.keySet()) {
-			this._rulesProductions.get(s).set_minimumDepth(9999);
-			this._rulesProductions.get(s)._minimumExp = 9999;
+			this._rulesProductions.get(s).set_minimumDepth(inf);
+			this._rulesProductions.get(s)._minimumExp = inf;
 		}
 		
 		//rules mindepth
-		for(Symbol s:this._rulesProductions.keySet()) {
-			visitedRules.clear();
-			this._calculateRuleMinDepth(this._rulesProductions.get(s), visitedRules);
-			calculated.add(s);
-			for(Symbol s2:this._rulesProductions.keySet()) {
-				if(!calculated.contains(s2)) {
-					this._rulesProductions.get(s2)._minimumDepth=9999;
-				}
-			}
-		}
+		calculateRuleMinDepth();
+		calculateProductionsMinDepth();
 		
-		//productions mindepth
-		for(Symbol s:this._rulesProductions.keySet()) {
-			this._calculateProductionsMinDepth(this._rulesProductions.get(s));
-		}
 		
-		calculated.clear();
 		//rules minExp
-		for(Symbol s:this._rulesProductions.keySet()) {
-			visitedRules.clear();
-			this._calculateRuleMinExpansion(this._rulesProductions.get(s),visitedRules);
-			calculated.add(s);
-			for(Symbol s2:this._rulesProductions.keySet()) {
-				if(!calculated.contains(s2)) {
-					this._rulesProductions.get(s2)._minimumDepth=9999;
-				}
-			}
-		}
 		
-		//productions minExp
-		for(Symbol s:this._rulesProductions.keySet()) {
-			this._calculateProductionsMinExpansion(this._rulesProductions.get(s));
-		}
+		this.calculateRuleMinExpansion();
+		
+		
+		this.calculateProductionsMinExpansion();
+		
 		
 		for(Symbol s:this._rulesProductions.keySet()) {
 			visitedRules.clear();
@@ -200,74 +184,96 @@ public abstract class AbstractGrammar {
 		}
 		
 	}
-	private void _calculateRuleMinExpansion(Rule query, List<Symbol> visitedRules) {
-		if(!visitedRules.contains(query.get_symbol())) {
-			for(Production p:query) {
-				p._minimumExp = 0;
-				for(Symbol s:p) {
-					
-					if(s.type == SymbolType.NTerminal) {
-						visitedRules.add(query.get_symbol());
-						Rule r2 = this._rulesProductions.get(s);
-						_calculateRuleMinExpansion(r2,visitedRules);
-						p._minimumExp += r2._minimumExp+1;
+	private void calculateRuleMinDepth() {
+		boolean change=true;
+		while(change) {
+			change=false;
+			for(var entry:this._rulesProductions.entrySet()) {
+				Symbol s = entry.getKey();
+				Rule rule = entry.getValue();
+				int tmp = inf;
+				for(Production prod:rule) {
+					int tmp2=0;
+					for(Symbol s2:prod) {
+						 tmp2 = Math.max(auxMinDepth(s2), tmp2);
 					}
-					else {
-					}
-					
+					tmp = Math.min(auxInf(tmp2+1), tmp);
 				}
-				query._minimumExp = Math.min(query._minimumExp, p._minimumExp);
-			}
-		}	
-	}
-	private void _calculateProductionsMinExpansion(Rule query) {
-		for(Production p:query) {
-			p._minimumExp = 0;
-			for(Symbol s:p) {
-				if(s.type == SymbolType.NTerminal) {
-					p._minimumExp +=  this._rulesProductions.get(s)._minimumExp+1;
+				if(tmp!=rule._minimumDepth){
+					rule._minimumDepth = tmp;
+					change = true;
 				}
-				else {
-				}
-				
 			}
 		}
-		
 	}
-	private void _calculateRuleMinDepth(Rule query, List<Symbol> visitedRules) {
-		if(!visitedRules.contains(query.get_symbol())) {
-			for(Production p:query) {
+	private int auxMinDepth(Symbol s) {
+		if(s.type == SymbolType.NTerminal) {
+			int tmp =  _rulesProductions.get(s)._minimumDepth;
+			return auxInf(tmp);
+		}
+		return 1;
+	}
+	private int auxInf(int n) {
+		return n>=inf?inf:n;
+	}
+	private void calculateProductionsMinDepth() {
+		for(var entry:this._rulesProductions.entrySet()) {
+			for(Production p:entry.getValue()) {
 				p._minimumDepth = 0;
 				for(Symbol s:p) {
-					
 					if(s.type == SymbolType.NTerminal) {
-						visitedRules.add(query.get_symbol());
-						Rule r2 = this._rulesProductions.get(s);
-						_calculateRuleMinDepth(r2,visitedRules);
-						p._minimumDepth = Math.max(p._minimumDepth, r2._minimumDepth+1);
+						p._minimumDepth = Math.max(p._minimumDepth, this._rulesProductions.get(s)._minimumDepth);
 					}
 					else {
 						p._minimumDepth = Math.max(p._minimumDepth, 1);
 					}
-					
 				}
-				query._minimumDepth = Math.min(query._minimumDepth, p._minimumDepth);
-			}
-		}	
-	}
-	private void _calculateProductionsMinDepth(Rule query) {
-		for(Production p:query) {
-			p._minimumDepth = 0;
-			for(Symbol s:p) {
-				if(s.type == SymbolType.NTerminal) {
-					p._minimumDepth = Math.max(p._minimumDepth, this._rulesProductions.get(s)._minimumDepth+1);
-				}
-				else {
-					p._minimumDepth = Math.max(p._minimumDepth, 1);
-				}
-				
 			}
 		}
+	}
+	private void calculateRuleMinExpansion() {
+		boolean change=true;
+		while(change) {
+			change=false;
+			for(var entry:this._rulesProductions.entrySet()) {
+				Symbol s = entry.getKey();
+				Rule rule = entry.getValue();
+				int tmp = inf;
+				for(Production prod:rule) {
+					int tmp2=0;
+					for(Symbol s2:prod) {
+						 tmp2 += auxMinExp(s2);
+					}
+					tmp = Math.min(auxInf(tmp2), tmp);
+				}
+				if(tmp!=rule._minimumExp){
+					rule._minimumExp = tmp;
+					change = true;
+				}
+			}
+		}
+	}
+	private int auxMinExp(Symbol s) {
+		if(s.type == SymbolType.NTerminal) {
+			int tmp =  _rulesProductions.get(s)._minimumExp;
+			tmp++;
+			//if(_rulesProductions.get(s).size()>1)tmp++;
+			return auxInf(tmp);
+		}
+		return 0;
+	}
+	private void calculateProductionsMinExpansion() {
+		for(var entry:this._rulesProductions.entrySet()) {
+			for(Production p:entry.getValue()) {
+				p._minimumExp = 0;
+				for(Symbol s:p) {
+					if(s.type == SymbolType.NTerminal) {
+						p._minimumExp += this._rulesProductions.get(s)._minimumExp +1;
+					}
+				}
+			}
+		}
+		
 	}
 	private boolean _isRecursive(Rule query, List<Symbol> visitedRules) {
 		//System.out.println("Entering "+query._symbol+" method");
@@ -314,19 +320,18 @@ public abstract class AbstractGrammar {
 	
 	public static void main(String args[]) {
 		AbstractGrammar g = new StandardGrammar();
-		g.parseBNF("default2");
+		g.parseBNF("resources/grammar/default1.bnf");
 		System.out.println(g);
-//		AbstractGrammar g = new Grammar();
-//		g.parseBNF("test");
-//		g.calculateAttributes();
-//		
-//		for(Symbol k:g._rulesProductions.keySet()) {
-//			Rule r = g._rulesProductions.get(k);
-//			System.out.println("rule: "+r._symbol+" min: "+r._recursive);
-//			for(Production p:r) {
-//				System.out.println("prod: "+p+" min: "+p._recursive);
-//			}
-//		}
+
+		g.calculateAttributes();
+		
+		for(Symbol k:g._rulesProductions.keySet()) {
+			Rule r = g._rulesProductions.get(k);
+			System.out.printf("rule %s : (%b %d %d)\n",r._symbol,r._recursive,r._minimumDepth,r._minimumExp);
+			for(Production p:r) {
+				System.out.printf("		prod %s : (%b %d %d)\n",p,p._recursive,p._minimumDepth,p._minimumExp);
+			}
+		}
 		
 	}
 	

@@ -1,0 +1,3 @@
+<CODE> -> <LINE>|<CODE> <LINE>.
+<LINE> -> return <ACTION>;.
+<ACTION> -> RIGHT|LEFT|UP|DOWN|NEUTRAL.

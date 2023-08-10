@@ -1,12 +1,12 @@
-<CODE> -> <LINE>|<CODE> <LINE>.
-<LINE> -> return <ACTION>;|<IF>.
-<IF> -> if <COND> { <LINE> }.
-<COND> -> (<OBS>) | (<OBS> <OP> <OBS>) | ((<AREXP>) <OP> (<AREXP>)).
-<OBS> -> r_f_d|l_f_d|u_f_d|d_f_d.
+<S> -> <S><IF>|<IF>.
+<IF> -> if(<COND>'){'<RES>';}'|if(<COND>'){'<RES>';}else{'<RES>';}'.
+<COND> -> <OBS> <OP> <VALUE> | <OBS> <OP> <OBS> |'(' <COND> <OP_RELA> <COND>')'.
 <OP> -> '<'|'>'|'<='|'>='.
-<AR> -> +|*|-.
-<ACTION> -> RIGHT|LEFT|UP|DOWN|NEUTRAL.
-<V> -> 0|1|2|3|4|5|6|7.
-<AREXP> -> <OBS>|<V>|<AREXP> <AR> <AREXP>.
-<Pi> -> 0|1|2|3|4|5|6|7.
-<LOGOP> -> '||' | &&.
+<OP_RELA> -> '&&'|'||'.
+<VALUE> -> '-'<V>'.'<N>|<V>'.'<N>.
+<V> -> 0|1|2|3.
+<RES> -> <RES_BULL>|<RES_BEAR>|'res.bull=0'|'res.bear=0'.
+<RES_BULL> -> 'res.bull=res.bull+'<N>.
+<RES_BEAR> -> 'res.bear=res.bear+'<N>.
+<N> -> 0|1|2|3|4|5|6|7|8|9.
+<OBS> -> 'Momentum10'|'Momentum50'|'Momentum200'|'Macd10_30'|'Macd50_100'|'Macd100_200'.
