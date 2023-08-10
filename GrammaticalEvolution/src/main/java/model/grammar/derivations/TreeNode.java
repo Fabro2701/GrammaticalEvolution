@@ -11,6 +11,7 @@ public class TreeNode {
 	protected int _depth;
 	protected TreeNode _parent;
 	protected Symbol _data;
+	protected int expansion;
 	
 	public TreeNode(Symbol data) {
 		this._data = data;
@@ -56,6 +57,12 @@ public class TreeNode {
 	}
 	public int get_depth() {
 		return _depth;
+	}
+	public int getExpansion() {
+		return expansion;
+	}
+	public void setExpansion(int expansion) {
+		this.expansion = expansion;
 	}
 	@Override
 	public String toString() {

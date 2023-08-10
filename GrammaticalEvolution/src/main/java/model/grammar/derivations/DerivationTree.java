@@ -2,7 +2,9 @@ package model.grammar.derivations;
 
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.stream.Collectors;
 
+import model.Constants;
 import model.grammar.AbstractGrammar;
 import model.grammar.AbstractGrammar.Production;
 import model.grammar.AbstractGrammar.Rule;
@@ -61,17 +63,37 @@ public class DerivationTree {
 		return true;
 	}
 	public void expandAndPushNode(int codonValue, LinkedList<TreeNode> pending) {
+		expandAndPushNode(codonValue, pending, 0);
+	}
+	public void expandAndPushNode(int codonValue, LinkedList<TreeNode> pending, int pos) {
 		Rule r = _grammar.getRule(_current._data);
 		Production ps = _grammar.getRule(_current._data).get(codonValue%r.size());
 		for(Symbol s:ps) {
 			TreeNode n = new TreeNode(s);
 			addNode(n);
 		}
-		
-		pending.addAll(0, this._current._children);
-		
+		pending.addAll(pos, this._current._children.stream().filter(c->c._data.getType()==AbstractGrammar.SymbolType.NTerminal).collect(Collectors.toList()));
 	}
-	
+	public Chromosome buildChromosome(Chromosome crom) {
+		LinkedList<TreeNode>pending = new LinkedList<TreeNode>();
+		pending.add(this._root);
+		TreeNode c = null;
+		
+		int i=0;
+		while(!pending.isEmpty()) {
+			c=pending.poll();
+			if(_grammar.getRule(c._data).size()==1) {
+				//no codon used
+			}
+			else {
+				crom.setIntToCodon(i, c.getExpansion());
+				i++;
+			}
+			pending.addAll(0,c.get_children().stream().filter(ch->ch._data.getType()==AbstractGrammar.SymbolType.NTerminal).collect(Collectors.toList()));
+		}
+		crom.setUsedCodons(i);
+		return crom;
+	}
 	public TreeNode getDeepest() {
 		return this._deepest;
 	}
