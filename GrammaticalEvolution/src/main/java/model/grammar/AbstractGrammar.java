@@ -140,6 +140,12 @@ public abstract class AbstractGrammar {
 		public void set_minimumDepth(int _minimumDepth) {
 			this._minimumDepth = _minimumDepth;
 		}
+		public int get_minimumExp() {
+			return _minimumExp;
+		}
+		public void set_minimumExp(int _minimumExp) {
+			this._minimumExp = _minimumExp;
+		}
 		
 		
 		
