@@ -38,6 +38,7 @@ public class StandardGrammar extends AbstractGrammar{
 
 				int r = c.getCodon(i) % m;
 				c.setIntToModCodon(i, r);
+				c.setSymToCodon(i, t);
 				q.addAll(0, ps.get(r));
 			}
 			//int r = Util.toInt(codons.get(i).bits.get(0, Util.log2(m)));
@@ -56,7 +57,7 @@ public class StandardGrammar extends AbstractGrammar{
 			i++;
 			//i %= c.getLength(); no wrapping
 		}
-		c.setUsedCodons(i);
+		c.setUsedCodons(i+1);
 
 		
 		return terminals;

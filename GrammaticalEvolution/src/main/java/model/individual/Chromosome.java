@@ -8,11 +8,15 @@ import java.util.Random;
 
 import org.json.JSONObject;
 
+import model.grammar.AbstractGrammar;
+import model.grammar.AbstractGrammar.Symbol;
+
 
 
 public class Chromosome {
 	int codons[];
 	int modcodons[];
+	AbstractGrammar.Symbol[] symcodons;
 	int length;
 	int usedCodons;
 
@@ -21,6 +25,7 @@ public class Chromosome {
 		length = l;
 		codons = new int[length];
 		modcodons = new int[length];
+		symcodons = new AbstractGrammar.Symbol[length];
 		usedCodons = 0;
 		
 	}
@@ -28,12 +33,16 @@ public class Chromosome {
 		length = copy.length;
 		codons = new int[length];
 		modcodons = new int[length];
+		symcodons = new AbstractGrammar.Symbol[length];
 		for(int i=0; i<length; i++) {
 			codons[i] = copy.codons[i];
 		}
 		usedCodons = copy.usedCodons;
 		for(int i=0; i<usedCodons; i++) {
 			modcodons[i] = copy.modcodons[i];
+		}
+		for(int i=0; i<usedCodons; i++) {
+			symcodons[i] = copy.symcodons[i];
 		}
 	}
 	public void init(Random rnd) {
@@ -51,12 +60,17 @@ public class Chromosome {
 	public void setIntToModCodon(int i, int v) {
 		modcodons[i] = v;
 	}
+	public void setSymToCodon(int i, AbstractGrammar.Symbol v) {
+		symcodons[i] = v;
+	}
 	public void setArrayIntToCodon(int ...v) {
 		for(int i=0;i<v.length;i++) {
 			codons[i] = v[i];
 		}
 	}
-	
+	public int[] getRawCodons() {
+		return this.codons;
+	}
 	public int getUsedCodons() {
 		return usedCodons;
 	}
@@ -66,6 +80,7 @@ public class Chromosome {
 	public int getLength() {return this.length;}
 	public int getCodon(int i) {return this.codons[i];}
 	public int getModCodon(int i) {return this.modcodons[i];}
+	public Symbol getSymCodon(int i) {return this.symcodons[i];}
 	
 	@Override
 	public boolean equals(Object obj) {

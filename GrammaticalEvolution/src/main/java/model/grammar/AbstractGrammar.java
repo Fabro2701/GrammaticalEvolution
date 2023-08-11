@@ -50,6 +50,7 @@ public abstract class AbstractGrammar {
 			return this.name.equals(s);
 		}
 		public boolean equals(Symbol s) {
+			if(s==null)return false;
 			return this.name.equals(s.name)&&this.type==s.type;
 		}
 		@Override
