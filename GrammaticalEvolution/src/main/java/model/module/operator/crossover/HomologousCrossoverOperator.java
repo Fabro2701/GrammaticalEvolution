@@ -44,15 +44,15 @@ public class HomologousCrossoverOperator extends CrossoverOperator{
 			if(homoPoint==c1.getLength()-1)break;
 			homoPoint++;
 		}
+		//System.out.println(homoPoint);
 		int crossPoint = rnd.nextInt(c1.getLength()-homoPoint)+homoPoint;
 		
 		if(homoPoint!=crossPoint) {
 			for(int i=homoPoint;i<=crossPoint;i++) {
-				child1.setIntToCodon(i, c2.getCodon(i));
-				child2.setIntToCodon(i, c1.getCodon(i));
+				child1.setIntToCodon(i, c2.getModCodon(i));
+				child2.setIntToCodon(i, c1.getModCodon(i));
 			}
 		}
-		
 		
 		return new Pair<Chromosome, Chromosome>(child1,child2);
 	}

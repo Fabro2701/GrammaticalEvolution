@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 public class Chromosome {
 	int codons[];
+	int modcodons[];
 	int length;
 	int usedCodons;
 
@@ -19,16 +20,21 @@ public class Chromosome {
 	public Chromosome(int l) {
 		length = l;
 		codons = new int[length];
+		modcodons = new int[length];
 		usedCodons = 0;
 		
 	}
 	public Chromosome(Chromosome copy) {
 		length = copy.length;
 		codons = new int[length];
+		modcodons = new int[length];
 		for(int i=0; i<length; i++) {
 			codons[i] = copy.codons[i];
 		}
 		usedCodons = copy.usedCodons;
+		for(int i=0; i<usedCodons; i++) {
+			modcodons[i] = copy.modcodons[i];
+		}
 	}
 	public void init(Random rnd) {
 		for(int i=0; i<length; i++) {
@@ -41,6 +47,9 @@ public class Chromosome {
 	}
 	public void setIntToCodon(int i, int v) {
 		codons[i] = v;
+	}
+	public void setIntToModCodon(int i, int v) {
+		modcodons[i] = v;
 	}
 	public void setArrayIntToCodon(int ...v) {
 		for(int i=0;i<v.length;i++) {
@@ -56,6 +65,7 @@ public class Chromosome {
 	}
 	public int getLength() {return this.length;}
 	public int getCodon(int i) {return this.codons[i];}
+	public int getModCodon(int i) {return this.modcodons[i];}
 	
 	@Override
 	public boolean equals(Object obj) {

@@ -24,7 +24,7 @@ public class StandardGrammar extends AbstractGrammar{
 		LinkedList<Symbol> q = new LinkedList<Symbol>();
 		LinkedList<Symbol> terminals = new LinkedList<Symbol>();
 		
-		int limit=100;
+		int limit=200;
 		int i=0;
 		int calls=0;
 		while(true) {
@@ -37,6 +37,7 @@ public class StandardGrammar extends AbstractGrammar{
 			else {
 
 				int r = c.getCodon(i) % m;
+				c.setIntToModCodon(i, r);
 				q.addAll(0, ps.get(r));
 			}
 			//int r = Util.toInt(codons.get(i).bits.get(0, Util.log2(m)));
@@ -51,11 +52,11 @@ public class StandardGrammar extends AbstractGrammar{
 			if(q.isEmpty())break;
 			
 			t = q.pop();
+			if(i==c.getLength()-1)return null;
 			i++;
-			i %= c.getLength();
-			if(calls>=limit)return null;
+			//i %= c.getLength(); no wrapping
 		}
-		c.setUsedCodons(calls);
+		c.setUsedCodons(i);
 
 		
 		return terminals;
