@@ -12,7 +12,7 @@ import model.individual.Individual;
 import model.individual.Population;
 import model.module.operator.Operator;
 
-public class LinearRankSelectionOperator extends SelectionOperator{
+public class LinearRankSelectionOperator extends SelectionOperator implements Stochastic{
 	public LinearRankSelectionOperator(Properties properties, Random rnd) {
 		super(properties, rnd);
 		// TODO Auto-generated constructor stub

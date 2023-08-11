@@ -11,7 +11,7 @@ import model.individual.Individual;
 import model.individual.Population;
 import model.module.operator.Operator;
 
-public class TournamentSelectionOperator extends SelectionOperator{
+public class TournamentSelectionOperator extends SelectionOperator implements Stochastic{
 	int k;
 	public TournamentSelectionOperator(Properties properties, Random rnd) {
 		super(properties, rnd);

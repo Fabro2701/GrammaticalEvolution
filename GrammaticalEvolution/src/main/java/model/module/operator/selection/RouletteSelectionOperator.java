@@ -12,7 +12,7 @@ import model.individual.Individual;
 import model.individual.Population;
 import model.module.operator.Operator;
 
-public class RouletteSelectionOperator extends SelectionOperator{
+public class RouletteSelectionOperator extends SelectionOperator implements Stochastic{
 	public RouletteSelectionOperator(Properties properties, Random rnd) {
 		super(properties, rnd);
 		// TODO Auto-generated constructor stub
