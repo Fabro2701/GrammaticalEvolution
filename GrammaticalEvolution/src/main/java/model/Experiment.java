@@ -18,8 +18,8 @@ import model.module.operator.selection.SelectionOperator;
 
 public abstract class Experiment {
 	protected AbstractSearchAlgorithm algorithm;
-	protected Population generalPopulation;
-	protected Population selectedPopulation;
+	volatile protected Population generalPopulation;
+	volatile protected Population selectedPopulation;
 	protected Random rnd;
 
 	public Experiment(AbstractSearchAlgorithm algorithm) {

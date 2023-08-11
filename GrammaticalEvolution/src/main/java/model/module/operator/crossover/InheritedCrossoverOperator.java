@@ -38,6 +38,7 @@ public class InheritedCrossoverOperator extends CrossoverOperator{
 			if(m1==null)m1 = ops.get(rnd.nextInt(ops.size()));
 			if(m2==null)m2 = ops.get(rnd.nextInt(ops.size()));
 			
+			
 			if(m1==m2) {
 				Pair<Chromosome, Chromosome> ncs = m1.crossover(parents.first.getGenotype().getChromosome(0),parents.second.getGenotype().getChromosome(0));
 

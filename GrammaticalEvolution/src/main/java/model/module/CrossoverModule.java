@@ -22,12 +22,19 @@ public class CrossoverModule extends Module{
 	
 	@Override
 	public void execute() {
+	
+		//System.out.println("*****-*"+population.stream().filter(i->!i.isValid()).count()+"******");
 		Pair<Individual,Individual>parents = new Pair<Individual,Individual>(null,null);
-		for(int i=0;i<population.size();i++) {
+		for(int i=0;i<population.size()/2;i++) {
 			parents.first = this.population.get(rnd.nextInt(this.population.size()));
 			parents.second = this.population.get(rnd.nextInt(this.population.size()));
+
 			this.operator.cross(parents);
+			
+			if(!parents.first.isValid()) population.remove(parents.first);
+			if(!parents.second.isValid()) population.remove(parents.second);
 		}
+		//System.out.println("*****-*"+population.stream().filter(i->i.isValid()).count()+"******");
 	}
 	@Override
 	public void setProperties(Properties properties) {

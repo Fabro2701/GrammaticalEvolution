@@ -37,7 +37,9 @@ public class LHSCrossoverOperator extends CrossoverOperator{
 		Chromosome child1 = new Chromosome(c1);
 		Chromosome child2 = new Chromosome(c2);
 		
-
+		if(c1.getUsedCodons()<0) {
+			int a=0;
+		}
 		int crossPoint1 = rnd.nextInt(c1.getUsedCodons());
 		Symbol crossSymbol1 = c1.getSymCodon(crossPoint1);
 		
@@ -109,9 +111,6 @@ public class LHSCrossoverOperator extends CrossoverOperator{
 				i--;
 			}
 			else {
-				if(crossPoint+i>=100) {
-					int a=0;
-				}
 				int r = c.getModCodon(crossPoint+i);
 				q.addAll(0, ps.get(r).stream().filter(s->s.getType()==AbstractGrammar.SymbolType.NTerminal).collect(Collectors.toList()));
 			}
@@ -156,5 +155,6 @@ public class LHSCrossoverOperator extends CrossoverOperator{
 		System.out.println("-------------------\n\n");
 		System.out.println(tree2);
 		op.cross(new Pair<Individual,Individual>(ind1,ind2));
+		//[92, 218, 67, 72, 164, 35, 203, 19, 149, 51, 211, 245, 146, 160, 226, 103, 88, 199, 111, 85, 21, 106, 28, 8, 158, 251, 193, 231, 26, 227, 175, 41, 152, 137, 182, 107, 0, 125, 84, 122, 244, 190, 95, 175, 227, 113, 12, 199, 87, 125, 208, 10, 138, 67, 220, 107, 175, 73, 164, 73, 40, 180, 249, 86, 4, 74, 213, 53, 230, 94, 242, 102, 237, 141, 126, 248, 81, 144, 176, 91, 160, 121, 168, 188, 169, 142, 50, 141, 182, 24, 127, 218, 132, 48, 59, 230, 25, 3, 184, 204]
 	}
 }

@@ -3,6 +3,7 @@ package model.module;
 import java.util.Properties;
 import java.util.Random;
 
+import model.individual.Individual;
 import model.individual.Population;
 import model.module.operator.Operator;
 import model.module.operator.selection.SelectionOperator;
@@ -19,6 +20,8 @@ public class SelectionModule extends Module{
 	public void execute() {
 		this.selectedPopulation.clear();
 		operator.selectPopulation(population);
+		
+		selectedPopulation.removeIf(i->!i.isValid());
 		//this.population.removeAll(selectedPopulation);
 	}
 	@Override

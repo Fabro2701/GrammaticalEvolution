@@ -53,7 +53,10 @@ public class StandardGrammar extends AbstractGrammar{
 			if(q.isEmpty())break;
 			
 			t = q.pop();
-			if(i==c.getLength()-1)return null;
+			if(i==c.getLength()-1) {
+				c.setUsedCodons(-1);
+				return null;
+			}
 			i++;
 			//i %= c.getLength(); no wrapping
 		}
