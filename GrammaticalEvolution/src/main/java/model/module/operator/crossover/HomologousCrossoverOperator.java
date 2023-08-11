@@ -24,17 +24,8 @@ public class HomologousCrossoverOperator extends CrossoverOperator{
 
 	
 
+
 	@Override
-	public void cross(Pair<Individual, Individual> parents) {
-		if(this.probability > this.rnd.nextFloat()) {
-			Pair<Chromosome, Chromosome> ncs = crossover(parents.first.getGenotype().getChromosome(0),parents.second.getGenotype().getChromosome(0));
-			parents.first.setGenotype(new Genotype(ncs.first));
-			parents.first.revaluate();
-			parents.second.setGenotype(new Genotype(ncs.second));
-			parents.second.revaluate();
-		}
-		
-	}
 	public Pair<Chromosome, Chromosome> crossover(Chromosome c1, Chromosome c2) {
 		Chromosome child1 = new Chromosome(c1);
 		Chromosome child2 = new Chromosome(c2);

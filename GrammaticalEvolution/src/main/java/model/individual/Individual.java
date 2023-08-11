@@ -1,6 +1,7 @@
 package model.individual;
 
 import model.grammar.AbstractGrammar;
+import model.module.operator.crossover.CrossoverOperator;
 
 public class Individual implements Comparable<Individual>, Cloneable{
 	
@@ -10,6 +11,8 @@ public class Individual implements Comparable<Individual>, Cloneable{
 	protected int age;
 	protected boolean evaluated,valid;
 	protected double fitness;
+	
+	protected CrossoverOperator crossMethod;
 	
 	public Individual() {
 		evaluated = valid = false;
@@ -34,6 +37,7 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		this.valid = copy.valid;
 		this.fitness = copy.fitness;
 		this.evaluated = copy.evaluated;
+		this.crossMethod = copy.crossMethod;
 	}
 	public void revaluate() {
 		this.evaluated = false;
@@ -81,6 +85,12 @@ public class Individual implements Comparable<Individual>, Cloneable{
 	}
 	public void setValid(boolean valid) {
 		this.valid = valid;
+	}
+	public CrossoverOperator getCrossMethod() {
+		return crossMethod;
+	}
+	public void setCrossMethod(CrossoverOperator crossMethod) {
+		this.crossMethod = crossMethod;
 	}
 	@Override
 	public int compareTo(Individual o) {
