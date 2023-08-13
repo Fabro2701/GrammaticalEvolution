@@ -1,14 +1,17 @@
 package model.grammar.derivations;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import model.Constants;
 import model.grammar.AbstractGrammar;
 import model.grammar.AbstractGrammar.Production;
 import model.grammar.AbstractGrammar.Rule;
 import model.grammar.AbstractGrammar.Symbol;
+import model.grammar.AbstractGrammar.SymbolType;
 import model.grammar.StandardGrammar;
 import model.individual.Chromosome;
 import model.individual.Genotype;
@@ -17,11 +20,12 @@ import model.individual.Phenotype;
 
 public class DerivationTree {
 	private TreeNode _current, _root , _deepest;
-	private int _nodeCount;
+	private int _nodeCount, ntNodeCount;
 	private AbstractGrammar _grammar;
 	
 	public DerivationTree(AbstractGrammar grammar) {
 		this._nodeCount = 0;
+		this.ntNodeCount = 0;
 		this._grammar = grammar;
 	}
 	public DerivationTree(TreeNode copy) {
@@ -39,6 +43,7 @@ public class DerivationTree {
 			if(_current._depth>=_deepest._depth) _deepest = node;
 		}
 		_nodeCount++;
+		if(node.getData().getType()==SymbolType.NTerminal)ntNodeCount++;
 	}
 	public boolean buildFromChromosome(Chromosome c) {
 		addNode(new TreeNode(_grammar.getInitial()));
@@ -94,11 +99,30 @@ public class DerivationTree {
 		crom.setUsedCodons(i);
 		return crom;
 	}
+	/**
+	 * preorder
+	 */
+	public List<TreeNode>flat(){
+		List<TreeNode> l = new ArrayList<>(this.ntNodeCount);
+		ArrayDeque<TreeNode>q = new ArrayDeque<TreeNode>();
+		
+		q.add(_root);
+		TreeNode tmp;
+		while(!q.isEmpty()) {
+			tmp = q.poll();
+			for(TreeNode n:tmp.get_children())if(n.getData().getType()==SymbolType.NTerminal)q.add(n);
+			l.add(tmp);
+		}
+		return l;
+	}
 	public TreeNode getDeepest() {
 		return this._deepest;
 	}
 	public int get_nodeCount() {
 		return _nodeCount;
+	}
+	public int getNTNodeCount() {
+		return this.ntNodeCount;
 	}
 	public TreeNode getRoot() {
 		return this._root;

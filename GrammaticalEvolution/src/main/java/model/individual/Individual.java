@@ -1,6 +1,7 @@
 package model.individual;
 
 import model.grammar.AbstractGrammar;
+import model.grammar.derivations.DerivationTree;
 import model.module.operator.crossover.CrossoverOperator;
 
 public class Individual implements Comparable<Individual>, Cloneable{
@@ -13,6 +14,8 @@ public class Individual implements Comparable<Individual>, Cloneable{
 	protected double fitness;
 	
 	protected CrossoverOperator crossMethod;
+	
+	protected DerivationTree tree;
 	
 	public Individual() {
 		evaluated = valid = false;
@@ -38,11 +41,13 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		this.fitness = copy.fitness;
 		this.evaluated = copy.evaluated;
 		this.crossMethod = copy.crossMethod;
+		this.tree = copy.tree;
 	}
 	public void revaluate() {
 		this.evaluated = false;
 		this.phenotype.init(grammar.parse(genotype.getChromosome(0)));
 		this.valid = this.phenotype.isValid();
+		this.tree = null;
 	}
 	public Genotype getGenotype() {
 		return genotype;
@@ -91,6 +96,16 @@ public class Individual implements Comparable<Individual>, Cloneable{
 	}
 	public void setCrossMethod(CrossoverOperator crossMethod) {
 		this.crossMethod = crossMethod;
+	}
+	public DerivationTree getTree() {
+		if(tree==null) {
+			DerivationTree t = new DerivationTree(grammar);
+			if(t.buildFromChromosome(this.genotype.getChromosome(0))) tree = t;
+		}
+		return tree;
+	}
+	public void setTree(DerivationTree tree) {
+		this.tree = tree;
 	}
 	@Override
 	public int compareTo(Individual o) {

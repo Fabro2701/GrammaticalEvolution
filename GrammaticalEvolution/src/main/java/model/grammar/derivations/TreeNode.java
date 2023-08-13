@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import model.grammar.AbstractGrammar.Symbol;
+import model.grammar.AbstractGrammar.SymbolType;
 
 
 public class TreeNode {
@@ -84,4 +85,12 @@ public class TreeNode {
             }
         }
     }
+	public String getFlatString() {
+		if(this._children.size()==0)return this._data.getName();
+		StringBuilder sb = new StringBuilder();
+		for(TreeNode n:this._children) {
+			sb.append(n.getFlatString());
+		}
+		return sb.toString();
+	}
 }

@@ -2,15 +2,13 @@ package model.grammar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Queue;
 
-
-import model.Util.Pair;
+import model.grammar.AbstractGrammar.Symbol;
+import model.grammar.AbstractGrammar.SymbolType;
+import model.grammar.derivations.TreeNode;
 import model.individual.Chromosome;
 
 
@@ -66,6 +64,12 @@ public abstract class AbstractGrammar {
 		public Production() {
 			super();
 		}
+		public Production(Symbol... terms) {
+			this();
+			for (int i = 0; i < terms.length; i++) {
+				this.add(terms[i]);
+			}
+		}
 		public int get_minimumDepth() {
 			return _minimumDepth;
 		}
@@ -83,12 +87,6 @@ public abstract class AbstractGrammar {
 		}
 		public void set_recursive(boolean _recursive) {
 			this._recursive = _recursive;
-		}
-		public Production(Symbol... terms) {
-			this();
-			for (int i = 0; i < terms.length; i++) {
-				this.add(terms[i]);
-			}
 		}
 		
 	
@@ -326,6 +324,35 @@ public abstract class AbstractGrammar {
 		//System.out.println("Quitting "+query._symbol+" method");
 		return b;
 	}
+	public class Module{
+		TreeNode node;
+		double fitness;
+		String symbols;
+		public Module(TreeNode node, double fitness, String symbols) {
+			this.node = node;
+			this.fitness = fitness;
+			this.symbols = symbols;
+		}
+		public TreeNode getNode() {
+			return node;
+		}
+		public void setNode(TreeNode node) {
+			this.node = node;
+		}
+		public double getFitness() {
+			return fitness;
+		}
+		public void setFitness(double fitness) {
+			this.fitness = fitness;
+		}
+	}
+	public void addModule(Module m) {
+		TreeNode node = m.getNode();
+		Rule r = this.getRule(node.getData());
+		Production p = new Production(new Symbol(m.symbols, SymbolType.Terminal));
+		r.add(p);
+	}
+	
 	
 	public static void main(String args[]) {
 		AbstractGrammar g = new StandardGrammar();
