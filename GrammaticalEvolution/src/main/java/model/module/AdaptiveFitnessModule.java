@@ -19,7 +19,7 @@ public class AdaptiveFitnessModule extends FitnessModule{
 	FitnessEvaluationOperator initOp;	
 	FitnessEvaluationOperator selectedOp;
 	int count;
-	int m;
+	int m,g;
 	public AdaptiveFitnessModule(Population population, Properties properties, Random rnd) {
 		super(population, properties, rnd);
 		ops = new ArrayList<>();
@@ -28,10 +28,10 @@ public class AdaptiveFitnessModule extends FitnessModule{
 	
 	@Override
 	public void execute() {
-		if(count==0)selectedOp = initOp;
+		if(count<g)selectedOp = initOp;
 		else {
 			int sets = ops.size();
-			int idx = (int)((count-1)%(sets*m))/m;
+			int idx = (int)((count-g)%(sets*m))/m;
 			//System.out.println(idx+"------");
 			selectedOp = ops.get(idx);
 		}
@@ -87,6 +87,7 @@ public class AdaptiveFitnessModule extends FitnessModule{
 	public void setProperties(Properties properties) {
 		super.setProperties(properties);
 		m = Integer.parseInt(properties.getProperty("adaptive_m", "10"));
+		g = Integer.parseInt(properties.getProperty("adaptive_g", "10"));
 	}
 	public AdaptiveFitnessModule addOperator(FitnessEvaluationOperator op) {
 		this.ops.add(op);
