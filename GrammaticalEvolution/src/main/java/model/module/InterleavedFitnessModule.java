@@ -14,33 +14,30 @@ import model.individual.Population;
 import model.module.operator.Operator;
 import model.module.operator.fitness.FitnessEvaluationOperator;
 
-public class FitnessModule extends Module{
-	float defaultFitness;
-	FitnessEvaluationOperator operator;	
-	public FitnessModule(Population population, Properties properties, Random rnd) {
+public class InterleavedFitnessModule extends FitnessModule{
+	List<FitnessEvaluationOperator> ops;	
+	List<FitnessEvaluationOperator> selectedOperators;	
+	float interleavedProb;
+	public InterleavedFitnessModule(Population population, Properties properties, Random rnd) {
 		super(population, properties, rnd);
-		// TODO Auto-generated constructor stub
+		ops = new ArrayList<>();
+		selectedOperators = new ArrayList<>();
 	}
 	
 	@Override
 	public void execute() {
+		selectedOperators.clear();
+		for(FitnessEvaluationOperator op:ops) {
+			if(interleavedProb<rnd.nextFloat()) {
+				selectedOperators.add(op);
+			}
+		}
+		if(selectedOperators.isEmpty())selectedOperators.add(ops.get(rnd.nextInt(ops.size())));
+		
 		ForkJoinPool pool = ForkJoinPool.commonPool();
-		Task task = new Task(0,population.size()-1);
+		Task task = new Task(0, population.size()-1);
 		pool.invoke(task);
 		pool.shutdown();
-
-/*
-		for(Individual ind:population) {
-			if(ind.isEvaluated())continue;
-			if(ind.isValid()) {
-				ind.setFitness(operator.evaluate(ind));
-			}
-			else {
-				ind.setFitness(this.defaultFitness);
-			}
-			ind.setEvaluated(true);
-		}
-		*/
 	}
 	private class Task extends RecursiveAction {
 		int i,j;
@@ -69,13 +66,17 @@ public class FitnessModule extends Module{
 		private void doCompute() {
 			Individual ind = null;
 			for(int idx=i; idx<=j; idx++) {
-				ind = FitnessModule.this.population.get(idx);
-				if(ind.isEvaluated())continue;
+				ind = InterleavedFitnessModule.this.population.get(idx);
+				//if(ind.isEvaluated())continue;
 				if(ind.isValid()) {
-					ind.setFitness(operator.evaluate(ind));
+					float s = 0f;
+					for(FitnessEvaluationOperator op:InterleavedFitnessModule.this.selectedOperators) {
+						s += op.evaluate(ind);
+					}
+					ind.setFitness(s);
 				}
 				else {
-					ind.setFitness(FitnessModule.this.defaultFitness);
+					ind.setFitness(InterleavedFitnessModule.this.defaultFitness);
 				}
 				ind.setEvaluated(true);
 			}
@@ -85,12 +86,16 @@ public class FitnessModule extends Module{
 	}
 	@Override
 	public void setProperties(Properties properties) {
-		defaultFitness = Float.parseFloat(properties.getProperty(Constants.DEFAULT_FITNESS, Constants.DEFAULT_FITNESS_VALUE));
-
+		super.setProperties(properties);
+		interleavedProb = Float.parseFloat(properties.getProperty("interleaved", "0.1"));
+	}
+	public InterleavedFitnessModule addOperator(FitnessEvaluationOperator op) {
+		this.ops.add(op);
+		return this;
+		
 	}
 	@Override
 	public void addOperator(Operator op) {
-		operator = (FitnessEvaluationOperator)op;
-		
+		System.err.println("inappropriate method for InterleavedFitnessModule");
 	}
 }
