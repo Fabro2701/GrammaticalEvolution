@@ -114,16 +114,12 @@ public class LHSCrossoverOperator extends CrossoverOperator{
 				int r = c.getModCodon(crossPoint+i);
 				q.addAll(0, ps.get(r).stream().filter(s->s.getType()==AbstractGrammar.SymbolType.NTerminal).collect(Collectors.toList()));
 			}
-		
-			
 
 			i++;
 			if(q.isEmpty())break;
 			t = q.pop();
 			
 		}
-
-		
 		return i;
 	}
 	public static void main(String args[]) {

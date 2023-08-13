@@ -43,7 +43,7 @@ public class DerivationTree {
 			if(_current._depth>=_deepest._depth) _deepest = node;
 		}
 		_nodeCount++;
-		if(node.getData().getType()==SymbolType.NTerminal)ntNodeCount++;
+		if(node.getData().getType()==SymbolType.NTerminal && _grammar.getRule(node.getData()).size()!=1)ntNodeCount++;
 	}
 	public boolean buildFromChromosome(Chromosome c) {
 		addNode(new TreeNode(_grammar.getInitial()));
@@ -110,8 +110,9 @@ public class DerivationTree {
 		TreeNode tmp;
 		while(!q.isEmpty()) {
 			tmp = q.poll();
-			for(TreeNode n:tmp.get_children())if(n.getData().getType()==SymbolType.NTerminal)q.add(n);
-			l.add(tmp);
+			List<TreeNode>tmpl = tmp.get_children().stream().filter(n->n.getData().getType()==SymbolType.NTerminal).collect(Collectors.toList());
+			for(int i=tmpl.size()-1;i>=0;i--)q.addFirst(tmpl.get(i));
+			if(_grammar.getRule(tmp.getData()).size()!=1) l.add(tmp);
 		}
 		return l;
 	}

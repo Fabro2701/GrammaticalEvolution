@@ -345,6 +345,7 @@ public abstract class AbstractGrammar {
 		public void setFitness(double fitness) {
 			this.fitness = fitness;
 		}
+		@Override public String toString() {return node.getData().toString()+" -> "+this.symbols;}
 	}
 	public void addModule(Module m) {
 		TreeNode node = m.getNode();

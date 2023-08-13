@@ -9,7 +9,7 @@ import model.module.operator.Operator;
 import model.module.operator.fitness.FitnessEvaluationOperator;
 
 public abstract class GrammarOperator extends Operator{
-
+	protected int updateRate;
 	public GrammarOperator(Properties properties, Random rnd) {
 		super(properties, rnd);
 	}
@@ -19,5 +19,9 @@ public abstract class GrammarOperator extends Operator{
 		
 	}
 
-	public abstract void modify(Population population, AbstractGrammar grammar, FitnessEvaluationOperator fitnessOp);
+	public abstract void modify(Population population, AbstractGrammar grammar);
+
+	public int getUpdateRate() {
+		return updateRate;
+	}
 }
