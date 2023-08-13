@@ -7,6 +7,7 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import model.Util;
 import model.Util.Pair;
 import model.grammar.AbstractGrammar;
 import model.grammar.AbstractGrammar.Production;
@@ -43,7 +44,7 @@ public class LHSCrossoverOperator extends CrossoverOperator{
 		int crossPoint1 = rnd.nextInt(c1.getUsedCodons());
 		Symbol crossSymbol1 = c1.getSymCodon(crossPoint1);
 		
-		int crossPoint2 = searchSymbol(c2, crossSymbol1, rnd.nextInt(c2.getUsedCodons()));
+		int crossPoint2 = Util.searchSymbol(c2, crossSymbol1, rnd.nextInt(c2.getUsedCodons()));
 		
 		if(crossPoint2==-1) {//one-point
 			for(int i=crossPoint1;i<child1.getLength();i++) {
@@ -52,76 +53,22 @@ public class LHSCrossoverOperator extends CrossoverOperator{
 			}
 		}
 		else {
-			int nExp1 = expansionsNeeded(c1, crossPoint1);
-			int nExp2 = expansionsNeeded(c2, crossPoint2);
+			int nExp1 = Util.expansionsNeeded(c1, crossPoint1, grammar);
+			int nExp2 = Util.expansionsNeeded(c2, crossPoint2, grammar);
 			
-			replaceAndPush(child1.getRawCodons(),crossPoint1,nExp1,c2.getRawCodons(),crossPoint2,nExp2);
-			replaceAndPush(child2.getRawCodons(),crossPoint2,nExp2,c1.getRawCodons(),crossPoint1,nExp1);
+			Util.replaceAndPush(child1.getRawCodons(),crossPoint1,nExp1,c2.getRawCodons(),crossPoint2,nExp2);
+			Util.replaceAndPush(child2.getRawCodons(),crossPoint2,nExp2,c1.getRawCodons(),crossPoint1,nExp1);
 		}
 		
 
 		return new Pair<Chromosome, Chromosome>(child1,child2);
 	}
 
-	/**
-	 * 
-	 * @param arr1 destination
-	 * @param ini1
-	 * @param n1
-	 * @param arr2 source
-	 * @param ini2
-	 * @param n2
-	 */
-	private static void replaceAndPush(int[] arr1, int ini1, int n1, int[] arr2, int ini2, int n2) {
-		if(n1==n2) {
-			for(int i=0;i<n2&&i+ini1<arr1.length&&i+ini2<arr2.length;i++)arr1[i+ini1]=arr2[i+ini2];
-		}
-		else if(n1>n2) {
-			for(int i=0;i<n2&&i+ini1<arr1.length&&i+ini2<arr2.length;i++)arr1[i+ini1]=arr2[i+ini2];
-			for(int i=ini1+n1;i<arr1.length;i++)arr1[i-(n1-n2)]=arr1[i];
-		}
-		else if(n1<n2) {
-			for(int i=arr1.length-1-(n2-n1);i>=ini1+n1;i--)arr1[i+(n2-n1)]=arr1[i];
-			for(int i=0;i<n2&&i+ini1<arr1.length&&i+ini2<arr2.length;i++)arr1[i+ini1]=arr2[i+ini2];
-		}
-	}
+	
 
-	private int searchSymbol(Chromosome c, Symbol symbol, int mid) {
-		int i=0;
-		
-		while(mid+i<c.getLength()||mid-i>=0) {
-			if(mid+i<c.getLength()&&symbol.equals(c.getSymCodon(mid+i)))return mid+i;
-			if(mid-i>=0&&symbol.equals(c.getSymCodon(mid-i)))return mid-i;
-			i++;
-		}
-		return -1;
-	}
+	
 
-	private int expansionsNeeded(Chromosome c, int crossPoint) {
-		Symbol t = c.getSymCodon(crossPoint);
-		List<Production> ps;
-		LinkedList<Symbol> q = new LinkedList<Symbol>();
-		
-		int i=0;
-		while(true) {
-			ps = grammar.getRule(t);
-			int m = ps.size();
-			if(m==1) {
-				q.addAll(0, ps.get(0).stream().filter(s->s.getType()==AbstractGrammar.SymbolType.NTerminal).collect(Collectors.toList()));
-				i--;
-			}
-			else {
-				int r = c.getModCodon(crossPoint+i);
-				q.addAll(0, ps.get(r).stream().filter(s->s.getType()==AbstractGrammar.SymbolType.NTerminal).collect(Collectors.toList()));
-			}
-
-			i++;
-			if(q.isEmpty())break;
-			t = q.pop();
-			
-		}
-		return i;
-	}
+	
 	public static void main(String args[]) {
 		/*int arr1[]= {1,2,3,4,5,6,7,8,9};
 		int arr2[]= {10,11,12,13,14,15,16,17,18,19};

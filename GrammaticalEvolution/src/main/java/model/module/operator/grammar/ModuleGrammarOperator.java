@@ -1,16 +1,14 @@
 package model.module.operator.grammar;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-
+import model.Util;
 import model.grammar.AbstractGrammar;
 import model.grammar.AbstractGrammar.Module;
-import model.grammar.AbstractGrammar.Production;
 import model.grammar.AbstractGrammar.Symbol;
 import model.grammar.StandardGrammar;
 import model.grammar.derivations.DerivationTree;
@@ -20,7 +18,10 @@ import model.individual.Genotype;
 import model.individual.Individual;
 import model.individual.Phenotype;
 import model.individual.Population;
+import model.module.InitializationModule;
 import model.module.operator.fitness.FitnessEvaluationOperator;
+import model.module.operator.initialization.InitializationOperator;
+import model.module.operator.initialization.RandomInitializerOperator;
 
 
 
@@ -30,9 +31,11 @@ public class ModuleGrammarOperator extends GrammarOperator{
 	int n;
 	double p;
 	FitnessEvaluationOperator fitnessOp;
-	public ModuleGrammarOperator(Properties properties, Random rnd, FitnessEvaluationOperator fitnessOp) {
+	InitializationOperator initialiser;
+	public ModuleGrammarOperator(Properties properties, Random rnd, FitnessEvaluationOperator fitnessOp, InitializationOperator initialiser) {
 		super(properties, rnd);
 		this.fitnessOp = fitnessOp;
+		this.initialiser = initialiser;
 	}
 	public enum ID_TYPE{MUTATION,INSERTION,FREQUENCY,RANDOM}
 	
@@ -59,9 +62,10 @@ public class ModuleGrammarOperator extends GrammarOperator{
 		case FREQUENCY:
 			break;
 		case INSERTION:
+			modules = this.insertionModules(validIndividuals, grammar);
 			break;
 		case MUTATION:
-			modules = this.mutationModules(validIndividuals, grammar, fitnessOp);
+			modules = this.mutationModules(validIndividuals, grammar);
 			break;
 		case RANDOM:
 			modules = this.randomModules(validIndividuals, grammar);
@@ -84,6 +88,69 @@ public class ModuleGrammarOperator extends GrammarOperator{
 		validIndividuals = null;
 	}
 
+	private List<Module> insertionModules(List<Individual> inds, AbstractGrammar grammar) {
+		List<Module> modules = new ArrayList<>();
+
+		//generate n test individuals
+		Population pop = new Population();
+		Properties props = new Properties(this.properties);
+		props.put("population_size", String.valueOf(this.n));
+		InitializationModule initmod = new InitializationModule(pop, props, this.rnd);
+		initmod.addOperator(this.initialiser);
+		initmod.execute();
+		
+		//evaluate test individual
+		double fb[] = new double[n];
+		for(int i=0;i<pop.size();i++)if(pop.get(i).isValid())fb[i] = this.fitnessOp.evaluate(pop.get(i));
+
+		//pick random node from individual
+		Individual ind = randomChoice(inds);//or the best
+		Chromosome originalCh = ind.getGenotype().getChromosome(0);
+		DerivationTree tree = ind.getTree();
+		int idx = rnd.nextInt(tree.getNTNodeCount());
+		TreeNode node = tree.flat().get(idx);
+		int originalExp = Util.expansionsNeeded(originalCh, idx, grammar);
+		Symbol symbol = originalCh.getSymCodon(idx);
+
+		double fa[] = new double[n];
+		for(int i=0;i<n;i++) {
+			Individual indR = pop.get(i);
+			if(!pop.get(i).isValid())continue;
+			
+			Chromosome c = indR.getGenotype().getChromosome(0);
+			int idxR = Util.searchSymbol(c, symbol, rnd.nextInt(c.getUsedCodons()));
+			if(idxR==-1)continue;
+			
+
+			int exp = Util.expansionsNeeded(c, idxR, grammar);
+			
+			Util.replaceAndPush(c.getRawCodons(), idxR, exp, originalCh.getRawCodons(), idx, originalExp);
+
+			indR.revaluate();
+			if(indR.isValid()) {
+				fa[i] = fitnessOp.evaluate(indR);
+				
+			}
+		}
+		
+		//if its better than n*p passes
+		int count = 0;
+		int valids = 0;
+		double fm = 0d;
+		for(int i=0;i<n;i++) {
+			if(!pop.get(i).isValid())continue;
+			
+			if(fb[i]<fa[i])count++;
+			fm += fa[i] - fb[i];
+			valids++;
+		}
+		fm /= valids;
+		
+		if(count >= valids*p)modules.add(grammar.new Module(node, fm, node.getFlatString()));
+		
+		return modules;
+	}
+
 	private List<Module> randomModules(List<Individual> inds, AbstractGrammar grammar) {
 		List<Module> modules = new ArrayList<>();
 		for(int i=0;i<inds.size()/10;i++) {
@@ -95,7 +162,7 @@ public class ModuleGrammarOperator extends GrammarOperator{
 		}
 		return modules;
 	}
-	private List<Module> mutationModules(List<Individual> inds, AbstractGrammar grammar, FitnessEvaluationOperator fitnessOp) {
+	private List<Module> mutationModules(List<Individual> inds, AbstractGrammar grammar) {
 		List<Module> modules = new ArrayList<>();
 
 		Individual ind = randomChoice(inds);//or the best
@@ -106,7 +173,7 @@ public class ModuleGrammarOperator extends GrammarOperator{
 		DerivationTree tree = ind.getTree();
 		int idx = rnd.nextInt(tree.getNTNodeCount());
 		TreeNode node = tree.flat().get(idx);
-		int originalExp = expansionsNeeded(originalCh, idx, grammar);
+		int originalExp = Util.expansionsNeeded(originalCh, idx, grammar);
 
 		double f[] = new double[n];
 		for(int i=0;i<n;i++) {
@@ -117,7 +184,7 @@ public class ModuleGrammarOperator extends GrammarOperator{
 			}
 			indR.revaluate();
 			if(indR.isValid()) {
-				int exp = expansionsNeeded(c, idx, grammar);
+				int exp = Util.expansionsNeeded(c, idx, grammar);
 				f[i] = fitnessOp.evaluate(indR);
 				int[]codons = c.getRawCodons();
 				for(int j=0;j+idx+exp<codons.length&&j+idx+originalExp<originalCh.getLength();j++) {
@@ -153,36 +220,12 @@ public class ModuleGrammarOperator extends GrammarOperator{
 	private <T> T randomChoice(List<T>l) {
 	    return l.get(rnd.nextInt(l.size()));
 	}
-	private int expansionsNeeded(Chromosome c, int crossPoint, AbstractGrammar grammar) {
-		Symbol t = c.getSymCodon(crossPoint);
-		List<Production> ps;
-		LinkedList<Symbol> q = new LinkedList<Symbol>();
-		
-		int i=0;
-		while(true) {
-			ps = grammar.getRule(t);
-			int m = ps.size();
-			if(m==1) {
-				q.addAll(0, ps.get(0).stream().filter(s->s.getType()==AbstractGrammar.SymbolType.NTerminal).collect(Collectors.toList()));
-				i--;
-			}
-			else {
-				int r = c.getModCodon(crossPoint+i);
-				q.addAll(0, ps.get(r).stream().filter(s->s.getType()==AbstractGrammar.SymbolType.NTerminal).collect(Collectors.toList()));
-			}
-
-			i++;
-			if(q.isEmpty())break;
-			t = q.pop();
-			
-		}
-		return i;
-	}
+	
 	public static void main(String args[]) {
 
 		Properties p = new Properties();
-		p.put("module_id_method", "MUTATION");
-		Random rnd = new Random(34);
+		p.put("module_id_method", "INSERTION");
+		Random rnd = new Random(84);
 		AbstractGrammar g = new StandardGrammar();
 		g.parseBNF("resources/grammar/default2.bnf");
 		
@@ -209,8 +252,8 @@ public class ModuleGrammarOperator extends GrammarOperator{
 			}
 			
 		};
-		
-		GrammarOperator moduleGrammarOp = new ModuleGrammarOperator(p, rnd, fitnessOp);
+		InitializationOperator initOp = new RandomInitializerOperator(p, rnd, g);
+		GrammarOperator moduleGrammarOp = new ModuleGrammarOperator(p, rnd, fitnessOp, initOp);
 		moduleGrammarOp.modify(pop, g);
 		
 		
