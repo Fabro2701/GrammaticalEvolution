@@ -50,6 +50,11 @@ public class Chromosome {
 			codons[i] = rnd.nextInt(256);
 		}
 	}
+	public void clear() {
+		this.codons = null;
+		this.modcodons = null;
+		this.symcodons = null;
+	}
 	public void shrink(int l) {
 		codons = Arrays.copyOf(codons, l);
 		this.length=l;

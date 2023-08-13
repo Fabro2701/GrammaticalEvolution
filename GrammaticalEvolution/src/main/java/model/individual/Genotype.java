@@ -30,5 +30,9 @@ public class Genotype extends ArrayList<Chromosome>{
 	public Chromosome getChromosome(int i) {
 		return this.get(i);
 	}
+	public void _clear() {
+		for(Chromosome c:this)c.clear();
+		this.clear();
+	}
 	
 }

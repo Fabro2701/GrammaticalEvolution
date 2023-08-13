@@ -59,7 +59,7 @@ public class ModuleGrammarOperator extends GrammarOperator{
 		List<Individual>validIndividuals = population.stream().filter(Individual::isValid).collect(Collectors.toList());
 		
 		switch(identificationMethod) {
-		case FREQUENCY:
+		case FREQUENCY://pending
 			break;
 		case INSERTION:
 			modules = this.insertionModules(validIndividuals, grammar);

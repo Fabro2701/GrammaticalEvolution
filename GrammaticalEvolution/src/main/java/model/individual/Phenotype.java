@@ -26,6 +26,12 @@ public class Phenotype {
 	public boolean isValid() {
 		return valid;
 	}
+	public void clear() {
+		visualization = null;
+		plainSymbols = null;
+		if(symbols!=null)symbols.clear(); 
+		symbols = null;
+	}
 
 //	public Strategy getStrategy() {
 //		return strategy;

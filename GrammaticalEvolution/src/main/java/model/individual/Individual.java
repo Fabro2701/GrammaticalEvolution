@@ -49,6 +49,13 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		this.valid = this.phenotype.isValid();
 		this.tree = null;
 	}
+	public void clear() {
+		this.genotype._clear();
+		this.genotype = null;
+		this.phenotype.clear();
+		this.phenotype = null;
+		this.tree = null;
+	}
 	public Genotype getGenotype() {
 		return genotype;
 	}

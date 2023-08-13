@@ -48,6 +48,7 @@ public class SimpleJoinOperator extends JoinOperator{
 		//System.out.println("removing: "+size);
 		Collections.sort(population, Collections.reverseOrder());
 		for(int i=0;i<size;i++) {
+			population.get(population.size()-1).clear();
 			population.remove(population.size()-1);
 		}
 		
